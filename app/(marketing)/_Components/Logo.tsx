@@ -3,14 +3,14 @@ import Image from "next/image";
 import React from "react";
 import { Poppins } from "next/font/google";
 import { cn } from "@/lib/utils";
-import { useTheme } from "next-themes";
+// import { useTheme } from "next-themes";
 
 const font = Poppins({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
 });
 function Logo() {
-  const { theme, setTheme } = useTheme();
+  //   const { theme, setTheme } = useTheme();
   return (
     <div className="hidden md:flex items-center gap-x-2">
       <Image
