@@ -1,6 +1,12 @@
 "use client";
 import { cn } from "@/lib/utils";
-import { ChevronsLeft, MenuIcon, PlusCircle } from "lucide-react";
+import {
+  ChevronsLeft,
+  MenuIcon,
+  PlusCircle,
+  Search,
+  Settings,
+} from "lucide-react";
 import { usePathname } from "next/navigation";
 import React, {
   useRef,
@@ -22,6 +28,7 @@ import { useDispatch } from "react-redux";
 import { addDocument, setDocuments } from "@/store/slices/documentSlice";
 import { get } from "http";
 import { toast } from "sonner";
+import DocumentList from "./DocumentList";
 
 function Navigation() {
   const pathname = usePathname();
@@ -176,6 +183,10 @@ function Navigation() {
           <UserItems />
         </div>
         <div className="mt-4 cursor-pointer">
+          <Item label="Search" icon={Search} isSearch onClick={() => {}} />
+
+          <Item label={"Settings"} onClick={() => {}} icon={Settings} />
+
           <Item
             label={"new page"}
             onClick={handleCreateDocument}
@@ -183,11 +194,7 @@ function Navigation() {
           />
         </div>
         <div className="mt-4">
-          {documents.map((doc) => (
-            <p key={doc.id} className="">
-              {doc.title}
-            </p>
-          ))}
+          <DocumentList />
         </div>
         <div
           onMouseDown={handleMouseDown}
