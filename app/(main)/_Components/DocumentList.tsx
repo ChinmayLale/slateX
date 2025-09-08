@@ -9,12 +9,13 @@ import Item from "./Item";
 import { cn } from "@/lib/utils";
 import { FileIcon } from "lucide-react";
 
-interface doumentListProps {
+interface DocumentListProps {
   parentId?: string;
   level?: number;
   data?: Document;
 }
-function DocumentList({ parentId, level = 0 }: doumentListProps) {
+
+function DocumentList({ parentId, level = 0 }: DocumentListProps) {
   const params = useParams();
   const router = useRouter();
   const documents = useSelector(
@@ -22,7 +23,6 @@ function DocumentList({ parentId, level = 0 }: doumentListProps) {
   );
   const [expanded, setExpanded] = React.useState<Record<string, boolean>>({});
 
-  const pages = documents.map((doc) => doc.pages);
   const onExpand = (id: string) => {
     setExpanded((prevExpanded) => ({
       ...prevExpanded,
@@ -46,44 +46,53 @@ function DocumentList({ parentId, level = 0 }: doumentListProps) {
 
   return (
     <>
-      <p
-        style={{ paddingLeft: level ? `${level * 12 + 12}px ` : "12px" }}
-        className={cn(
-          "hidden text-sm font-medium text-muted-foreground/80 ",
-          expanded && "last:block",
-          level === 0 && "hidden"
-        )}
-      >
-        No Pages Inside
-      </p>
       {documents.map((document) => {
         return (
           <div key={document.id}>
             <Item
-              onClick={() => {}}
+              onClick={() => {
+                // Navigate to document or handle document click
+                router.push(`/documents/${document.id}`);
+              }}
               id={document.id}
               label={document.title || "Untitled Document"}
               icon={FileIcon}
               documentIcon={""}
               active={params.documentId === document.id}
               level={level}
-              onExpand={() => {}}
+              onExpand={() => onExpand(document.id)}
               expanded={expanded[document.id]}
             />
 
-            {expanded[document.id] &&
-              document.pages.map((page) => (
-                <Item
-                  key={page.id}
-                  onClick={() => {}}
-                  onExpand={() => onExpand(document.id)}
-                  id={page.id}
-                  label={page.title || "Untitled Page"}
-                  icon={FileIcon} // Or a page icon
-                  active={params.pageId === page.id}
-                  level={level + 1}
-                />
-              ))}
+            {expanded[document.id] && (
+              <>
+                {document.pages && document.pages.length > 0 ? (
+                  document.pages.map((page, index) => (
+                    <Item
+                      key={page.id}
+                      onClick={() => {
+                        // Navigate to page
+                        router.push(
+                          `/documents/${document.id}/pages/${page.id}`
+                        );
+                      }}
+                      id={page.id}
+                      label={page.title || `Page ${index + 1}`}
+                      icon={FileIcon}
+                      active={params.pageId === page.id}
+                      level={level + 2}
+                    />
+                  ))
+                ) : (
+                  <p
+                    style={{ paddingLeft: `${(level + 1) * 12 + 12}px` }}
+                    className="text-sm font-medium text-muted-foreground/80 py-1"
+                  >
+                    No Pages Inside
+                  </p>
+                )}
+              </>
+            )}
           </div>
         );
       })}

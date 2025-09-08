@@ -4,7 +4,7 @@ import { ChevronDown, ChevronRight, LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Skeleton } from "@/components/ui/skeleton";
 
-interface itemProps {
+interface ItemProps {
   id?: string;
   documentIcon?: string;
   active?: boolean;
@@ -16,6 +16,7 @@ interface itemProps {
   onClick: () => void;
   icon: LucideIcon;
 }
+
 function Item({
   label,
   onClick,
@@ -28,7 +29,7 @@ function Item({
   level = 0,
   onExpand,
   ...props
-}: itemProps) {
+}: ItemProps) {
   const ChevronIcon = expanded ? ChevronDown : ChevronRight;
 
   const onExpandClick = (
@@ -48,26 +49,28 @@ function Item({
         active && "bg-primary/5 text-primary"
       )}
     >
-      {!!id && (
-        <div
-          className=" h-full rounded-sm hover:bg-neutral-300 dark:bg-neutral-600 mr-1"
-          role="button"
-          onClick={onExpandClick}
-        >
-          <ChevronIcon className="s-4 shrink-0 text-muted-foreground/50 bg-secondary" />
-        </div>
-      )}
+      {!!id &&
+        onExpand && ( // Only show chevron if onExpand is provided
+          <div
+            className="h-full rounded-sm hover:bg-neutral-300 dark:hover:bg-neutral-600 mr-1 p-0.5" // Fixed: added padding and hover state
+            role="button"
+            onClick={onExpandClick}
+          >
+            <ChevronIcon className="h-4 w-4 shrink-0 text-muted-foreground/50" />{" "}
+            {/* Fixed: corrected size classes */}
+          </div>
+        )}
 
       {documentIcon ? (
         <div className="mr-2 shrink-0 text-[18px]">{documentIcon}</div>
       ) : (
-        <Icon className="shrink-0 h-[18px] mr-2 text-muted-foreground" />
+        <Icon className="shrink-0 h-[18px] w-[18px] mr-2 text-muted-foreground" />
       )}
       <span className="truncate">{label}</span>
 
       {isSearch && (
         <kbd className="ml-auto pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-[1.5px] font-mono text-[10px] font-medium text-muted-foreground">
-          <span className="text-sm">&#8984;</span> k
+          <span className="text-sm">⌘</span> k
         </kbd>
       )}
     </div>
@@ -82,8 +85,8 @@ Item.Skeleton = function ItemSkeleton({ level }: { level: number }) {
       }}
       className="flex gap-x-2 py-2"
     >
-      <Skeleton className="s-4 " />
-      <Skeleton className="h-4 w-[30%] " />
+      <Skeleton className="h-4 w-4" /> {/* Fixed: corrected size classes */}
+      <Skeleton className="h-4 w-[30%]" />
     </div>
   );
 };
