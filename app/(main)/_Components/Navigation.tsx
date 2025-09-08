@@ -1,9 +1,17 @@
 "use client";
 import { cn } from "@/lib/utils";
-import { ChevronsLeft, MenuIcon } from "lucide-react";
+import { ChevronsLeft, MenuIcon, PlusCircle, PlusIcon } from "lucide-react";
 import { usePathname } from "next/navigation";
-import React, { useRef, ElementRef, useState, MouseEvent } from "react";
+import React, {
+  useRef,
+  ElementRef,
+  useState,
+  MouseEvent,
+  useEffect,
+} from "react";
 import { useMediaQuery } from "usehooks-ts";
+import UserItems from "./UserItems";
+import Item from "./Item";
 
 function Navigation() {
   const pathname = usePathname();
@@ -14,6 +22,20 @@ function Navigation() {
 
   const [isReseting, setIsReseting] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(isMobile);
+
+  useEffect(() => {
+    if (isMobile) {
+      collapse();
+    } else {
+      resetWidth();
+    }
+  }, [isMobile]);
+
+  useEffect(() => {
+    if (isMobile) {
+      collapse();
+    }
+  }, [isMobile, pathname]);
 
   const handleMouseMove = (event: MouseEvent) => {
     if (!isResizingref.current) {
@@ -108,10 +130,10 @@ function Navigation() {
           <ChevronsLeft className="h-6 w-6 " />
         </div>
         <div>
-          <p>acion items </p>
+          <UserItems />
         </div>
-        <div className="mt-4">
-          <p>docs </p>
+        <div className="mt-4 cursor-pointer">
+          <Item label="new page" onClick={() => {}} icon={PlusCircle} />
         </div>
         <div
           onMouseDown={handleMouseDown}

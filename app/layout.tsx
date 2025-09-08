@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Toaster } from "sonner";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/providers/theme-provider";
@@ -51,6 +52,7 @@ export default function RootLayout({
             // disableTransitionOnChange
             storageKey="slatX-key"
           >
+            <Toaster position="top-right" />
             {children}
           </ThemeProvider>
         </body>
