@@ -4,11 +4,10 @@ import { cn } from "@/lib/utils";
 import React from "react";
 import Logo from "./Logo";
 import { ModeToggle } from "@/components/ModeToggle";
-import Spinner from "@/components/Spinner";
+import UserMenu from "./UserMenu";
 
 function Navbar() {
   const scrolled = useScrollTop({ threshold: 60 });
-
   return (
     <div
       className={cn(
@@ -18,7 +17,7 @@ function Navbar() {
     >
       <Logo />
       <div className="md:ml-auto md:justify-end justify-between w-full flex items-center gap-x-2">
-        <Spinner />
+        <UserMenu />
         <ModeToggle />
       </div>
     </div>
