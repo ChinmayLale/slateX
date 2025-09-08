@@ -1,6 +1,6 @@
 "use client";
 import { cn } from "@/lib/utils";
-import { ChevronsLeft, MenuIcon, PlusCircle, PlusIcon } from "lucide-react";
+import { ChevronsLeft, MenuIcon, PlusCircle } from "lucide-react";
 import { usePathname } from "next/navigation";
 import React, {
   useRef,
@@ -12,16 +12,39 @@ import React, {
 import { useMediaQuery } from "usehooks-ts";
 import UserItems from "./UserItems";
 import Item from "./Item";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store";
+import {
+  createNewDocument,
+  getAllDocuments,
+} from "@/services/document.service";
+import { useDispatch } from "react-redux";
+import { addDocument, setDocuments } from "@/store/slices/documentSlice";
+import { get } from "http";
+import { toast } from "sonner";
 
 function Navigation() {
   const pathname = usePathname();
+  const dispatch = useDispatch();
   const isMobile = useMediaQuery("(max-width: 768px)");
   const isResizingref = useRef(false);
   const sideBarRef = useRef<ElementRef<"aside">>(null);
   const navbarRef = useRef<ElementRef<"div">>(null);
-
+  const documents = useSelector(
+    (state: RootState) => state.documents.documents
+  );
+  console.log({ documents });
   const [isReseting, setIsReseting] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(isMobile);
+
+  useState(() => {
+    const getDocs = async () => {
+      const documents = await getAllDocuments();
+      dispatch(setDocuments(documents));
+    };
+
+    getDocs();
+  }, []);
 
   useEffect(() => {
     if (isMobile) {
@@ -36,6 +59,26 @@ function Navigation() {
       collapse();
     }
   }, [isMobile, pathname]);
+
+  const handleCreateDocument = async () => {
+    try {
+      const data = createNewDocument();
+      toast.promise(data, {
+        loading: "Creating New Document...",
+        success: "Document created successfully",
+        error: "Failed to create document",
+      });
+      // console.log("New Document:", data);
+      const newDocument = await data;
+      if (!newDocument) {
+        toast.error("Failed to create document");
+        return;
+      }
+      dispatch(addDocument(newDocument));
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   const handleMouseMove = (event: MouseEvent) => {
     if (!isResizingref.current) {
@@ -133,7 +176,18 @@ function Navigation() {
           <UserItems />
         </div>
         <div className="mt-4 cursor-pointer">
-          <Item label="new page" onClick={() => {}} icon={PlusCircle} />
+          <Item
+            label={"new page"}
+            onClick={handleCreateDocument}
+            icon={PlusCircle}
+          />
+        </div>
+        <div className="mt-4">
+          {documents.map((doc) => (
+            <p key={doc.id} className="">
+              {doc.title}
+            </p>
+          ))}
         </div>
         <div
           onMouseDown={handleMouseDown}

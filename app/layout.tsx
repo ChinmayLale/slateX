@@ -4,6 +4,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { ClerkProvider } from "@/components/clerk-provider";
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -41,22 +42,23 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressContentEditableWarning>
-      <ClerkProvider>
-        <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-        >
-          <ThemeProvider
-            attribute={"class"}
-            defaultTheme="system"
-            enableSystem
-            // disableTransitionOnChange
-            storageKey="slatX-key"
+     
+        <ClerkProvider>
+          <body
+            className={`${geistSans.variable} ${geistMono.variable} antialiased`}
           >
-            <Toaster position="top-right" />
-            {children}
-          </ThemeProvider>
-        </body>
-      </ClerkProvider>
+            <ThemeProvider
+              attribute={"class"}
+              defaultTheme="system"
+              enableSystem
+              // disableTransitionOnChange
+              storageKey="slatX-key"
+            >
+              <Toaster position="top-right" />
+              {children}
+            </ThemeProvider>
+          </body>
+        </ClerkProvider>
     </html>
   );
 }
