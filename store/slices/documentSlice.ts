@@ -1,6 +1,6 @@
 "use client"; // THIS IS REQUIRED
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { Document } from "@/types/index";
+import { Document, Page } from "@/types/index";
 
 interface DocumentState {
    documents: Document[];
@@ -30,8 +30,22 @@ const documentSlice = createSlice({
       setError: (state, action: PayloadAction<string | null>) => {
          state.error = action.payload;
       },
+
+      addPageToCurrentDocumentReducer: (
+         state,
+         action: PayloadAction<{ documentId: string; page: Page }>
+      ) => {
+         const { documentId, page } = action.payload;
+         const documentIndex = state.documents.findIndex(doc => doc.id === documentId);
+         if (documentIndex !== -1) {
+            state.documents[documentIndex].pages.push(page);
+         } else {
+            console.warn("Document not found:", documentId);
+         }
+      }
+
    },
 });
 
-export const { setDocuments, setLoading, setError, addDocument } = documentSlice.actions;
+export const { setDocuments, setLoading, setError, addDocument, addPageToCurrentDocumentReducer } = documentSlice.actions;
 export default documentSlice.reducer;

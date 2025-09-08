@@ -8,6 +8,7 @@ import { useSelector } from "react-redux";
 import Item from "./Item";
 import { cn } from "@/lib/utils";
 import { FileIcon } from "lucide-react";
+import { DialogCloseButton } from "./DialogCloseButton";
 
 interface DocumentListProps {
   parentId?: string;
@@ -22,12 +23,19 @@ function DocumentList({ parentId, level = 0 }: DocumentListProps) {
     (state: RootState) => state.documents.documents
   );
   const [expanded, setExpanded] = React.useState<Record<string, boolean>>({});
-
+  const [open, setOpen] = React.useState(false);
   const onExpand = (id: string) => {
     setExpanded((prevExpanded) => ({
       ...prevExpanded,
       [id]: !prevExpanded[id],
     }));
+  };
+
+  const onAddPage = (documentId: string) => {
+    // Handle adding a new page to the document
+    console.log("Adding page to document:", documentId);
+    setOpen(true);
+    // You can dispatch an action or call an API here
   };
 
   if (documents === undefined) {
@@ -49,9 +57,14 @@ function DocumentList({ parentId, level = 0 }: DocumentListProps) {
       {documents.map((document) => {
         return (
           <div key={document.id}>
+            <DialogCloseButton
+              open={open}
+              onOpenChange={setOpen}
+              id={document.id}
+            />
+            {/* Document Item - shows add button */}
             <Item
               onClick={() => {
-                // Navigate to document or handle document click
                 router.push(`/documents/${document.id}`);
               }}
               id={document.id}
@@ -62,25 +75,27 @@ function DocumentList({ parentId, level = 0 }: DocumentListProps) {
               level={level}
               onExpand={() => onExpand(document.id)}
               expanded={expanded[document.id]}
+              showAddButton={true} // Show add button for documents
+              onAdd={() => onAddPage(document.id)} // Handle add page
             />
 
             {expanded[document.id] && (
               <>
                 {document.pages && document.pages.length > 0 ? (
-                  document.pages.map((page, index) => (
+                  document.pages.map((page) => (
                     <Item
                       key={page.id}
                       onClick={() => {
-                        // Navigate to page
                         router.push(
                           `/documents/${document.id}/pages/${page.id}`
                         );
                       }}
                       id={page.id}
-                      label={page.title || `Page ${index + 1}`}
+                      label={page.title || "Untitled Page"}
                       icon={FileIcon}
                       active={params.pageId === page.id}
-                      level={level + 2}
+                      level={level + 3}
+                      // No showAddButton prop = defaults to false, no add button for pages
                     />
                   ))
                 ) : (
