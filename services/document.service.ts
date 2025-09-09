@@ -52,3 +52,69 @@ export const addPageToCurrentDocument = async (documentId: string): Promise<Page
       throw err;
    }
 }
+
+
+
+export const archiveDocumentById = async (documentId: string): Promise<boolean> => {
+   try {
+      const res = await api.delete(`/documents?documentId=${documentId}`);
+      const { data } = res.data;
+      // console.log({ DOC: data });
+      return data;
+   } catch (err: unknown) {
+      if (err instanceof AxiosError) {
+         console.error("Axios error:", err.message);
+      } else {
+         console.error("Unexpected error:", err);
+      }
+      return false;
+   }
+}
+
+
+export const getAllTrashDocuments = async (): Promise<Document[]> => {
+   try {
+      const res = await api.get("/documents/trash");
+      const { data } = res.data;
+      return data;
+   } catch (err: unknown) {
+      if (err instanceof AxiosError) {
+         console.error("Axios error:", err.message);
+      } else {
+         console.error("Unexpected error:", err);
+      }
+      return [];
+   }
+}
+
+
+export const undoTrashDocumentById = async (documentId: string): Promise<boolean> => {
+   try {
+      const res = await api.put(`/documents?documentId=${documentId}`);
+      const { data } = res.data;
+      return data;
+   } catch (err: unknown) {
+      if (err instanceof AxiosError) {
+         console.error("Axios error:", err.message);
+      } else {
+         console.error("Unexpected error:", err);
+      }
+      return false;
+   }
+}
+
+
+export const deletePermenently = async (id: string): Promise<boolean> => {
+   try {
+      const res = await api.delete(`/documents/permanent?documentId=${id}`);
+      const { data } = res.data;
+      return data;
+   } catch (err: unknown) {
+      if (err instanceof AxiosError) {
+         console.error("Axios error:", err.message);
+      } else {
+         console.error("Unexpected error:", err);
+      }
+      return false;
+   }
+}

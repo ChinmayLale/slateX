@@ -28,6 +28,7 @@ export interface Page {
    documentId?: string | null;
    content?: JSON; // JSON, can refine this type later
    blocks: Block[];
+   isArchived: boolean;
 }
 
 export interface Document {

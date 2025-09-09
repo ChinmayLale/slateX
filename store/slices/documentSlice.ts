@@ -6,12 +6,14 @@ interface DocumentState {
    documents: Document[];
    loading: boolean;
    error: string | null;
+   trashDocuments: Document[]
 }
 
 const initialState: DocumentState = {
    documents: [],
    loading: false,
    error: null,
+   trashDocuments: []
 };
 
 const documentSlice = createSlice({
@@ -20,6 +22,10 @@ const documentSlice = createSlice({
    reducers: {
       setDocuments: (state, action: PayloadAction<Document[]>) => {
          state.documents = action.payload;
+      },
+
+      addDocuments: (state, action: PayloadAction<Document[]>) => {
+         state.documents = [...state.documents, ...action.payload];
       },
       addDocument: (state, action: PayloadAction<Document>) => {
          state.documents.push(action.payload);
@@ -42,10 +48,51 @@ const documentSlice = createSlice({
          } else {
             console.warn("Document not found:", documentId);
          }
-      }
+      },
+
+      archiveDocumentByIdReducer: (state, action: PayloadAction<string>) => {
+         const documentId = action.payload;
+         const documentIndex = state.documents.findIndex(doc => doc.id === documentId);
+         if (documentIndex !== -1) {
+            state.documents[documentIndex].isArchived = true;
+            const currentDocument = state.documents[documentIndex];
+            state.trashDocuments.push(currentDocument);
+         } else {
+            console.warn("Document not found:", documentId);
+            return;
+         }
+      },
+
+      restoreDocumentFromArchiveReducer: (state, action: PayloadAction<string>) => {
+         const documentId = action.payload;
+         const documentIndex = state.trashDocuments.findIndex(doc => doc.id === documentId);
+         if (documentIndex !== -1) {
+            state.trashDocuments[documentIndex].isArchived = false;
+            const currentDocument = state.trashDocuments[documentIndex];
+            state.documents.push(currentDocument);
+         } else {
+            console.warn("Document not found:", documentId);
+            return;
+         }
+      },
+
+      setArchievedDocuments: (state, action: PayloadAction<Document[]>) => {
+         state.trashDocuments = action.payload;
+      },
+
+      deleteDocumentFromArchiveReducer: (state, action: PayloadAction<string>) => {
+         const documentId = action.payload;
+         const documentIndex = state.trashDocuments.findIndex(doc => doc.id === documentId);
+         if (documentIndex !== -1) {
+            state.trashDocuments.splice(documentIndex, 1);
+         } else {
+            console.warn("Document not found:", documentId);
+            return;
+         }
+      },
 
    },
 });
 
-export const { setDocuments, setLoading, setError, addDocument, addPageToCurrentDocumentReducer } = documentSlice.actions;
+export const { setDocuments, setLoading, setError, addDocument, addPageToCurrentDocumentReducer, archiveDocumentByIdReducer, addDocuments, restoreDocumentFromArchiveReducer, setArchievedDocuments, deleteDocumentFromArchiveReducer } = documentSlice.actions;
 export default documentSlice.reducer;

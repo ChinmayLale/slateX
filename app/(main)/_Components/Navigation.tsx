@@ -6,8 +6,9 @@ import {
   PlusCircle,
   Search,
   Settings,
+  TrashIcon,
 } from "lucide-react";
-import { usePathname } from "next/navigation";
+import { useParams, usePathname } from "next/navigation";
 import React, {
   useRef,
   ElementRef,
@@ -29,6 +30,15 @@ import { addDocument, setDocuments } from "@/store/slices/documentSlice";
 import { get } from "http";
 import { toast } from "sonner";
 import DocumentList from "./DocumentList";
+import { useUser } from "@clerk/nextjs";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import TrashBox from "./TrashBox";
+import { toggleSearch, toggleSettings } from "@/store/slices/misc.slice";
+import NavBar from "./NavBar";
 
 function Navigation() {
   const pathname = usePathname();
@@ -37,10 +47,9 @@ function Navigation() {
   const isResizingref = useRef(false);
   const sideBarRef = useRef<ElementRef<"aside">>(null);
   const navbarRef = useRef<ElementRef<"div">>(null);
-  const documents = useSelector(
-    (state: RootState) => state.documents.documents
-  );
-  console.log({ documents });
+
+  const params = useParams();
+
   const [isReseting, setIsReseting] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(isMobile);
 
@@ -159,12 +168,20 @@ function Navigation() {
     }
   };
 
+  const handleSearchClick = () => {
+    dispatch(toggleSearch(true));
+  };
+
+  const handleOpenSettings = () => {
+    dispatch(toggleSettings(true));
+  };
+
   return (
     <>
       <aside
         ref={sideBarRef}
         className={cn(
-          "group/sidebar h-full bg-secondary overflow-y-auto relative flex w-60 flex-col z-[99999] ",
+          "group/sidebar h-full bg-secondary overflow-y-auto relative flex w-60 flex-col ",
           isReseting && " transition-all ease-in-out duration-300",
           isMobile && "w-0"
         )}
@@ -183,9 +200,18 @@ function Navigation() {
           <UserItems />
         </div>
         <div className="mt-4 cursor-pointer">
-          <Item label="Search" icon={Search} isSearch onClick={() => {}} />
+          <Item
+            label="Search"
+            icon={Search}
+            isSearch
+            onClick={handleSearchClick}
+          />
 
-          <Item label={"Settings"} onClick={() => {}} icon={Settings} />
+          <Item
+            label={"Settings"}
+            onClick={handleOpenSettings}
+            icon={Settings}
+          />
 
           <Item
             label={"new page"}
@@ -195,6 +221,17 @@ function Navigation() {
         </div>
         <div className="mt-4">
           <DocumentList />
+          <Popover>
+            <PopoverTrigger className="w-full mt-4">
+              <Item icon={TrashIcon} label={"Trash"} onClick={() => {}} />
+            </PopoverTrigger>
+            <PopoverContent
+              side={isMobile ? "bottom" : "right"}
+              className="p-1 w-72"
+            >
+              <TrashBox />
+            </PopoverContent>
+          </Popover>
         </div>
         <div
           onMouseDown={handleMouseDown}
@@ -210,15 +247,22 @@ function Navigation() {
           isMobile && "left-0 w-full"
         )}
       >
-        <nav className="bg-transparent px-3 py-2 w-full">
-          {isCollapsed && (
-            <MenuIcon
-              onClick={resetWidth}
-              className="h-6 w-6 text-muted-foreground cursor-pointer"
-              role="button"
-            />
-          )}
-        </nav>
+        {!!params.documentId ? (
+          <NavBar
+            isCollapsed={isCollapsed}
+            onResetWidth={resetWidth}
+          />
+        ) : (
+          <nav className="bg-transparent px-3 py-2 w-full">
+            {isCollapsed && (
+              <MenuIcon
+                onClick={resetWidth}
+                className="h-6 w-6 text-muted-foreground cursor-pointer"
+                role="button"
+              />
+            )}
+          </nav>
+        )}
       </div>
     </>
   );

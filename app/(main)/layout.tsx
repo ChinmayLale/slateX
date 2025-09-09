@@ -3,12 +3,21 @@ import React from "react";
 import Navigation from "./_Components/Navigation";
 import { Provider } from "react-redux";
 import { store } from "@/store";
+import SearchCommand from "@/components/SearchCommand";
+import ModalProvider from "@/components/providers/ModalProvider";
 function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <Provider store={store}>
-      <div className="w-full h-full flex dark:bg-[#1f1f1f]">
+      <div
+        className="w-full h-full flex dark:bg-[#1f1f1f]"
+        suppressContentEditableWarning
+      >
         <Navigation />
-        <main className="flex-1 h-full overflow-y-auto">{children}</main>
+        <main className="flex-1 h-full overflow-y-auto">
+          <SearchCommand />
+          <ModalProvider />
+          {children}
+        </main>
       </div>
     </Provider>
   );

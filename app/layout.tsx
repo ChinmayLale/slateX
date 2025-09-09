@@ -42,23 +42,23 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressContentEditableWarning>
-     
-        <ClerkProvider>
-          <body
-            className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+      <ClerkProvider>
+        <body
+          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+          suppressContentEditableWarning={true}
+        >
+          <ThemeProvider
+            attribute={"class"}
+            defaultTheme="system"
+            enableSystem
+            // disableTransitionOnChange
+            storageKey="slatX-key"
           >
-            <ThemeProvider
-              attribute={"class"}
-              defaultTheme="system"
-              enableSystem
-              // disableTransitionOnChange
-              storageKey="slatX-key"
-            >
-              <Toaster position="top-right" />
-              {children}
-            </ThemeProvider>
-          </body>
-        </ClerkProvider>
+            <Toaster position="top-right" />
+            {children}
+          </ThemeProvider>
+        </body>
+      </ClerkProvider>
     </html>
   );
 }

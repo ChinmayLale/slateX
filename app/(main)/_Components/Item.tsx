@@ -1,9 +1,28 @@
 "use client";
 import React from "react";
-import { ChevronDown, ChevronRight, LucideIcon, Plus } from "lucide-react";
+import {
+  ChevronDown,
+  ChevronRight,
+  LucideIcon,
+  MoreHorizontal,
+  Plus,
+  TrashIcon,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Skeleton } from "@/components/ui/skeleton";
 import { DialogCloseButton } from "./DialogCloseButton";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { useUser } from "@clerk/nextjs";
+import { archiveDocumentById } from "@/services/document.service";
+import { toast } from "sonner";
+import { useDispatch } from "react-redux";
+import { archiveDocumentByIdReducer } from "@/store/slices/documentSlice";
 
 interface ItemProps {
   id?: string;
@@ -16,8 +35,8 @@ interface ItemProps {
   label: string;
   onClick: () => void;
   icon: LucideIcon;
-  showAddButton?: boolean; // New prop to control when to show the plus button
-  onAdd?: () => void; // New prop for add functionality
+  showAddButton?: boolean;
+  onAdd?: () => void;
 }
 
 function Item({
@@ -31,11 +50,14 @@ function Item({
   isSearch,
   level = 0,
   onExpand,
-  showAddButton = false, // Default to false
+  showAddButton = false,
   onAdd,
   ...props
 }: ItemProps) {
+  const [open, setOpen] = React.useState(false);
   const ChevronIcon = expanded ? ChevronDown : ChevronRight;
+  const { user } = useUser();
+  const dispatch = useDispatch();
   const onExpandClick = (
     event: React.MouseEvent<HTMLDivElement, MouseEvent>
   ) => {
@@ -44,13 +66,47 @@ function Item({
   };
 
   const onAddClick = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    event.preventDefault();
     event.stopPropagation();
+    event.nativeEvent.stopImmediatePropagation(); // Add this line
+    setOpen(true);
+    // Call the onAdd prop if provided
     onAdd?.();
+  };
+
+  // Prevent parent onClick when clicking on interactive elements
+  const handleMainClick = (event: React.MouseEvent<HTMLDivElement>) => {
+    // Check if the click target is the add button or its children
+    const target = event.target as HTMLElement;
+    const isAddButton = target.closest("[data-add-button]");
+    const isExpandButton = target.closest("[data-expand-button]");
+
+    // Only trigger onClick if not clicking on interactive elements
+    if (!isAddButton && !isExpandButton) {
+      onClick();
+    }
+  };
+
+  const handleDeleteClick = async (id: string) => {
+    const data = archiveDocumentById(id);
+    toast.promise(data, {
+      loading: "Moving To Trash...",
+      success: "Page moved to trash successfully",
+      error: "Failed to move page to trash",
+    });
+
+    const page = await data;
+    if (!page) {
+      toast.error("Failed to delete page");
+      return;
+    }
+
+    dispatch(archiveDocumentByIdReducer(id));
   };
 
   return (
     <div
-      onClick={onClick}
+      onClick={handleMainClick}
       role="button"
       style={{ paddingLeft: level ? `${level * 12 + 12}px ` : "12px" }}
       className={cn(
@@ -58,8 +114,11 @@ function Item({
         active && "bg-primary/5 text-primary"
       )}
     >
+      <DialogCloseButton open={open} onOpenChange={setOpen} id={id ? id : ""} />
+
       {!!id && onExpand && (
         <div
+          data-expand-button // Add data attribute for identification
           className="h-full rounded-sm hover:bg-neutral-300 dark:hover:bg-neutral-600 mr-1 p-0.5"
           role="button"
           onClick={onExpandClick}
@@ -82,21 +141,55 @@ function Item({
         </kbd>
       )}
 
-      {/* Only show add button for documents (when showAddButton is true) */}
       {showAddButton && (
         <div className="ml-auto flex items-center">
+          <DropdownMenu>
+            <DropdownMenuTrigger
+              asChild
+              onClick={(e) => {
+                e.stopPropagation();
+              }}
+            >
+              <div
+                role="button"
+                className="opacity-0 group-hover:opacity-100 h-full ml-auto rounded-sm hover:bg-neutral-300 dark:hover:bg-neutral-600 cursor-pointer"
+              >
+                <MoreHorizontal className="w-4 h-4 text-muted-foreground" />
+              </div>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent
+              className="w-60"
+              align="start"
+              side="bottom"
+              forceMount
+            >
+              <DropdownMenuItem
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleDeleteClick(id || "");
+                }}
+              >
+                <TrashIcon className="h-4 w-4 mr-4" /> Delete
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <div className="text-xs text-muted-foreground p-1">
+                Last edited by{" "}
+                <span className="font-semibold">
+                  {user?.firstName || "you"}
+                </span>
+              </div>
+            </DropdownMenuContent>
+          </DropdownMenu>
           <div
+            data-add-button // Add data attribute for identification
             className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-sm hover:bg-neutral-300 dark:hover:bg-neutral-600 p-0.5 cursor-pointer"
             role="button"
-            onClick={(e) => {
-              onAddClick(e);
-            }}
+            onClick={onAddClick}
           >
             <Plus className="h-4 w-4 text-muted-foreground" />
           </div>
         </div>
       )}
-  
     </div>
   );
 }
@@ -109,8 +202,8 @@ Item.Skeleton = function ItemSkeleton({ level }: { level: number }) {
       }}
       className="flex gap-x-2 py-2"
     >
-      <Skeleton className="h-4 w-4" />
-      <Skeleton className="h-4 w-[30%]" />
+      <Skeleton className="h-4 w-4 bg-primary/5" />
+      <Skeleton className="h-4 w-[30%] bg-primary/5" />
     </div>
   );
 };

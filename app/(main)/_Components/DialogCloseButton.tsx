@@ -31,13 +31,21 @@ export function DialogCloseButton({
 }: DialogCloseButtonProps) {
   const dispatch = useDispatch();
   const onAddClick = async () => {
-    const data = await addPageToCurrentDocument(id);
-    if (!data) {
+    const data = addPageToCurrentDocument(id);
+
+    toast.promise(data, {
+      loading: "Adding Page...",
+      success: "Page added successfully",
+      error: "Failed to add page",
+    });
+
+    const page = await data;
+    if (!page) {
       toast.error("Failed to add page");
       return;
     }
     dispatch(
-      addPageToCurrentDocumentReducer({ documentId: id, page: data || {} })
+      addPageToCurrentDocumentReducer({ documentId: id, page: page || {} })
     );
   };
 
