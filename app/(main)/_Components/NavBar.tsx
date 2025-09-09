@@ -10,6 +10,7 @@ import {
 } from "@/store/selectors/documentSelectors";
 import { RootState } from "@/store";
 import { useParams } from "next/navigation";
+import Banner from "./Banner";
 
 interface NavBarProps {
   isCollapsed: boolean;
@@ -31,9 +32,12 @@ NavBarProps) {
     getPageByIds(state, documentId as string, pageId as string)
   );
 
+
+
+
   //   console.log({title: page?.title});
 
-  if (page === undefined) {
+  if (page?.title === undefined) {
     return (
       <nav className="bg-background dark:bg-[#1F1F1F] px-3 py-2 w-full flex items-center gap-x-4">
         <PageTitle.Skeleton />
@@ -59,6 +63,8 @@ NavBarProps) {
           />
         </div>
       </nav>
+
+      {page?.isArchived && (<Banner pageId={pageId as string}/> )}
     </>
   );
 }

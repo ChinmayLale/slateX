@@ -55,6 +55,9 @@ const documentSlice = createSlice({
          const documentIndex = state.documents.findIndex(doc => doc.id === documentId);
          if (documentIndex !== -1) {
             state.documents[documentIndex].isArchived = true;
+            state.documents[documentIndex].pages.forEach(page => {
+               page.isArchived = true;
+            });
             const currentDocument = state.documents[documentIndex];
             state.trashDocuments.push(currentDocument);
          } else {
@@ -68,6 +71,9 @@ const documentSlice = createSlice({
          const documentIndex = state.trashDocuments.findIndex(doc => doc.id === documentId);
          if (documentIndex !== -1) {
             state.trashDocuments[documentIndex].isArchived = false;
+            state.trashDocuments[documentIndex].pages.forEach(page => {
+               page.isArchived = false;
+            });
             const currentDocument = state.trashDocuments[documentIndex];
             state.documents.push(currentDocument);
          } else {

@@ -19,6 +19,7 @@ import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { toast } from "sonner";
 import ConfirmDelete from "./models/ConfirmDelete";
+import { useRouter } from "next/navigation";
 
 function TrashBox() {
   const [search, setSearch] = useState("");
@@ -26,7 +27,7 @@ function TrashBox() {
     (state: RootState) => state.documents.trashDocuments
   );
   const dispatch = useDispatch();
-
+  const router = useRouter();
   console.log({ documents: documents.length });
   const filteredDocuments = useMemo(() => {
     if (!search.trim()) return documents;
@@ -102,14 +103,15 @@ function TrashBox() {
               key={doc.id}
               role="button"
               onClick={() => {
-                console.log(doc.id);
+                router.push(`/documents/${doc.id}/${doc.pages[0].id}`);
               }}
               className="text-sm rounded-sm w-full hover:bg-primary/5 flex items-center text-primary justify-between overflow-y-auto "
             >
               <span className="truncate pl-2 ">{doc.title}</span>
               <div className="flex items-center">
                 <div
-                  onClick={() => {
+                  onClick={(e) => {
+                    e.stopPropagation();
                     console.log("restore document");
                     restoreDocument(doc.id);
                   }}
