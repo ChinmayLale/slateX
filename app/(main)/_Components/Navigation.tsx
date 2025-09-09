@@ -50,6 +50,9 @@ function Navigation() {
 
   const params = useParams();
 
+  const { documentId, pageId } = params;
+  // console.log({ documentId, pageId });
+
   const [isReseting, setIsReseting] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(isMobile);
 
@@ -234,6 +237,7 @@ function Navigation() {
           </Popover>
         </div>
         <div
+          role="button"
           onMouseDown={handleMouseDown}
           onClick={resetWidth}
           className="opacity-0 group-hover/sidebar:opacity-100 transition cursor-ew-resize absolute h-full w-1 bg-primary/10 right-0 top-0 "
@@ -248,10 +252,7 @@ function Navigation() {
         )}
       >
         {!!params.documentId ? (
-          <NavBar
-            isCollapsed={isCollapsed}
-            onResetWidth={resetWidth}
-          />
+          <NavBar isCollapsed={isCollapsed} onResetWidth={resetWidth} documentId={documentId as string} pageId={pageId as string}/>
         ) : (
           <nav className="bg-transparent px-3 py-2 w-full">
             {isCollapsed && (

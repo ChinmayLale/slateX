@@ -91,8 +91,22 @@ const documentSlice = createSlice({
          }
       },
 
+      UpdatePageTitleInDocumentReducer: (state, action: PayloadAction<{ documentId: string; pageId: string; title: string }>) => {
+         const { documentId, pageId, title } = action.payload;
+         const documentIndex = state.documents.findIndex(doc => doc.id === documentId);
+         if (documentIndex !== -1) {
+            const page = state.documents[documentIndex].pages.find(page => page.id === pageId);
+            if (page) {
+               page.title = title;
+            }
+         }
+      },
+
    },
 });
 
-export const { setDocuments, setLoading, setError, addDocument, addPageToCurrentDocumentReducer, archiveDocumentByIdReducer, addDocuments, restoreDocumentFromArchiveReducer, setArchievedDocuments, deleteDocumentFromArchiveReducer } = documentSlice.actions;
+
+
+
+export const { setDocuments, setLoading, setError, addDocument, addPageToCurrentDocumentReducer, archiveDocumentByIdReducer, addDocuments, restoreDocumentFromArchiveReducer, setArchievedDocuments, deleteDocumentFromArchiveReducer, UpdatePageTitleInDocumentReducer } = documentSlice.actions;
 export default documentSlice.reducer;

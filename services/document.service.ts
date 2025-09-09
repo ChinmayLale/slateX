@@ -118,3 +118,20 @@ export const deletePermenently = async (id: string): Promise<boolean> => {
       return false;
    }
 }
+
+
+
+export const updateTitleForPageService = async (documentId: string, pageId: string, title: string): Promise<string | null> => {
+   try {
+      const res = await api.post(`/documents/page/update-title`, { documentId, pageId, title });
+      const { data } = res.data;
+      return data;
+   } catch (err: unknown) {
+      if (err instanceof AxiosError) {
+         console.error("Axios error:", err.message);
+      } else {
+         console.error("Unexpected error:", err);
+      }
+      return "";
+   }
+}
