@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import React from "react";
+import React, { useEffect } from "react";
 import ConfirmDelete from "./models/ConfirmDelete";
 import {
   deletePermenently,
@@ -14,12 +14,14 @@ import {
 } from "@/store/slices/documentSlice";
 import { useDispatch } from "react-redux";
 import { useParams, useRouter } from "next/navigation";
+import { toggleDocumentDeleted } from "@/store/slices/misc.slice";
 
 function Banner({ pageId }: { pageId: string }) {
   const dispatch = useDispatch();
   const params = useParams();
   const router = useRouter();
   const documentId = params.documentId as string;
+
   const handlePermenentDelete = async (id: string) => {
     const res = deletePermenently(id);
     toast.promise(res, {
@@ -49,7 +51,7 @@ function Banner({ pageId }: { pageId: string }) {
     const result = await res;
     if (result) {
       dispatch(restoreDocumentFromArchiveReducer(id));
-      router.refresh();
+      window.location.reload();
     } else {
       toast.error("Error Restoring Document");
     }

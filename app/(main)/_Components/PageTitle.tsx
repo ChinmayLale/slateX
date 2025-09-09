@@ -5,8 +5,8 @@ import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { updateTitleForPageService } from "@/services/document.service";
 import { UpdatePageTitleInDocumentReducer } from "@/store/slices/documentSlice";
-import { Page } from "@/types";
-import React, { useEffect, useState } from "react";
+// import { Page } from "@/types";
+import React, { useEffect, useState, useRef } from "react";
 import { useDispatch } from "react-redux";
 import { useDebounceCallback } from "usehooks-ts";
 
@@ -17,18 +17,24 @@ interface PageTitleProps {
 }
 
 function PageTitle({ initialTitle, documentId, pageId }: PageTitleProps) {
-  const inputRef = React.useRef<HTMLInputElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
   const [title, setTitle] = useState(initialTitle);
   const [saving, setSaving] = useState(false);
   const [editing, setIsEditing] = useState(false);
+  const [lastSavedTitle, setLastSavedTitle] = useState(initialTitle);
   const dispatch = useDispatch();
 
   const saveTitle = useDebounceCallback(async (newTitle: string) => {
+    // Don't save if title hasn't actually changed
+    if (newTitle === lastSavedTitle) return;
+
     setSaving(true);
+
     try {
       const res = await updateTitleForPageService(documentId, pageId, newTitle);
-      // console.log({ res });
+
       if (res) {
+        setLastSavedTitle(newTitle);
         dispatch(
           UpdatePageTitleInDocumentReducer({
             documentId,
@@ -39,6 +45,8 @@ function PageTitle({ initialTitle, documentId, pageId }: PageTitleProps) {
       }
     } catch (error) {
       console.error(error);
+      // Revert to last saved title on error
+      setTitle(lastSavedTitle);
     } finally {
       setSaving(false);
     }
@@ -51,7 +59,6 @@ function PageTitle({ initialTitle, documentId, pageId }: PageTitleProps) {
   };
 
   const enableInput = () => {
-    setTitle(initialTitle);
     setIsEditing(true);
     setTimeout(() => {
       inputRef.current?.focus();
@@ -59,19 +66,30 @@ function PageTitle({ initialTitle, documentId, pageId }: PageTitleProps) {
     }, 0);
   };
 
-  const onkeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
+      disableInput();
+    }
+    if (e.key === "Escape") {
+      // Revert changes on escape
+      setTitle(lastSavedTitle);
       disableInput();
     }
   };
 
-  useEffect(() => {
-    setTitle(initialTitle);
-  }, [initialTitle]);
-
   const disableInput = () => {
     setIsEditing(false);
   };
+
+  // Only update local state when navigating to a different page
+  useEffect(() => {
+    // Only update if we're not editing and the title actually changed
+    if (!editing && initialTitle !== lastSavedTitle) {
+      setTitle(initialTitle);
+      setLastSavedTitle(initialTitle);
+    }
+  }, [initialTitle, editing, lastSavedTitle]);
+
   return (
     <div className="flex items-center gap-x-1">
       {editing ? (
@@ -80,18 +98,20 @@ function PageTitle({ initialTitle, documentId, pageId }: PageTitleProps) {
           ref={inputRef}
           value={title}
           onChange={handleChange}
-          onKeyDown={onkeyDown}
+          onKeyDown={onKeyDown}
           onBlur={disableInput}
-          onClick={enableInput}
         />
       ) : (
         <Button
-          onClick={() => setIsEditing(true)}
+          onClick={enableInput}
           variant="ghost"
           size="sm"
           className="font-medium h-auto p-1"
         >
-          {title}
+          {title || "Untitled"}
+          {saving && (
+            <span className="ml-1 text-xs text-muted-foreground">•</span>
+          )}
         </Button>
       )}
     </div>

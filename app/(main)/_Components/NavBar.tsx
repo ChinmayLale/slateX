@@ -4,10 +4,7 @@ import { MenuIcon } from "lucide-react";
 import React from "react";
 import PageTitle from "./PageTitle";
 import { useSelector } from "react-redux";
-import {
-  getPageByIds,
-  getPageTitleByIds,
-} from "@/store/selectors/documentSelectors";
+import { getPageByIds } from "@/store/selectors/documentSelectors";
 import { RootState } from "@/store";
 import { useParams } from "next/navigation";
 import Banner from "./Banner";
@@ -25,6 +22,8 @@ function NavBar({
 //   pageId,
 NavBarProps) {
   // Add Code here to getPage By Doc Id
+
+  const [isRestored, setIsRestored] = React.useState(false);
   const params = useParams();
   const { documentId, pageId } = params;
   //   console.log({ documentId, pageId });
@@ -32,10 +31,8 @@ NavBarProps) {
     getPageByIds(state, documentId as string, pageId as string)
   );
 
-
-
-
-  //   console.log({title: page?.title});
+  console.log("Page archived status:", page?.isArchived);
+  console.log("Full page object:", page);
 
   if (page?.title === undefined) {
     return (
@@ -64,7 +61,11 @@ NavBarProps) {
         </div>
       </nav>
 
-      {page?.isArchived && (<Banner pageId={pageId as string}/> )}
+      {page.isArchived  && (
+        <Banner
+          pageId={pageId as string}
+        />
+      )}
     </>
   );
 }

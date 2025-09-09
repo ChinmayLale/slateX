@@ -23,6 +23,7 @@ import { archiveDocumentById } from "@/services/document.service";
 import { toast } from "sonner";
 import { useDispatch } from "react-redux";
 import { archiveDocumentByIdReducer } from "@/store/slices/documentSlice";
+import { toggleDocumentDeleted } from "@/store/slices/misc.slice";
 
 interface ItemProps {
   id?: string;

@@ -76,6 +76,7 @@ const documentSlice = createSlice({
             });
             const currentDocument = state.trashDocuments[documentIndex];
             state.documents.push(currentDocument);
+            state.trashDocuments.splice(documentIndex,1);
          } else {
             console.warn("Document not found:", documentId);
             return;

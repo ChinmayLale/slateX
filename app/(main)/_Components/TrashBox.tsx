@@ -107,7 +107,7 @@ function TrashBox() {
               }}
               className="text-sm rounded-sm w-full hover:bg-primary/5 flex items-center text-primary justify-between overflow-y-auto "
             >
-              <span className="truncate pl-2 ">{doc.title}</span>
+              <span className="truncate pl-2 cursor-pointer">{doc.title}</span>
               <div className="flex items-center">
                 <div
                   onClick={(e) => {
