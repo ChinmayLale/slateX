@@ -29,6 +29,8 @@ export interface Page {
    content?: JSON; // JSON, can refine this type later
    blocks: Block[];
    isArchived: boolean;
+   coverImage?: string;
+   icon?: string;
 }
 
 export interface Document {
