@@ -1,9 +1,22 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { useUser } from "@clerk/nextjs";
+import { useRouter } from "next/navigation";
 import React from "react";
 
 function Header() {
+  const { isSignedIn } = useUser();
+  const router = useRouter();
+
+  const handleClick = () => {
+    if (isSignedIn) {
+      router.push("/documents"); // redirect to workspace if logged in
+    } else {
+      router.push("/sign-up"); // redirect to sign-up if not logged in
+    }
+  };
+
   return (
     <div className="max-w-3xl space-y-4">
       <h1 className="text-3xl sm:text-5xl md:text-6xl font-bold">
@@ -16,7 +29,9 @@ function Header() {
         come together seamlessly.
       </h3>
 
-      <Button>Get Started 🚀</Button>
+      <Button onClick={handleClick}>
+        {isSignedIn ? "Go to Workspace 🚀" : "Get Started 🚀"}
+      </Button>
     </div>
   );
 }
