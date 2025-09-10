@@ -20,6 +20,7 @@ import {
   addDocument,
   addPageToCurrentDocumentReducer,
 } from "@/store/slices/documentSlice";
+import { useUser } from "@clerk/nextjs";
 import React from "react";
 import { useDispatch } from "react-redux";
 import { toast } from "sonner";
@@ -35,9 +36,14 @@ export function AddDocumentModel({
 }: DialogCloseButtonProps) {
   const dispatch = useDispatch();
   const [title, setTitle] = React.useState("Untitled Document");
+  const {user} = useUser();
   const onAddClick = async () => {
     try {
-      const data = createNewDocument(title);
+      if(!user){
+        console.log("User Not Found");
+        return;
+      }
+      const data = createNewDocument(title , user.id);
       toast.promise(data, {
         loading: "Creating New Document...",
         success: "Document created successfully",
