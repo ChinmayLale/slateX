@@ -52,7 +52,7 @@ function Navigation() {
   const isResizingref = useRef(false);
   const sideBarRef = useRef<ElementRef<"aside">>(null);
   const navbarRef = useRef<ElementRef<"div">>(null);
-
+  const {user} = useUser();
   const openModel = useSelector(
     (state: RootState) => state.misc.toggleCreateDocument
   );
@@ -69,8 +69,10 @@ function Navigation() {
 
   useEffect(() => {
     const getDocs = async () => {
-      const documents = await getAllDocuments();
+      if(user){
+        const documents = await getAllDocuments(user.id);
       dispatch(setDocuments(documents));
+      }
     };
 
     getDocs();

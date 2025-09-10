@@ -20,9 +20,11 @@ import { useSelector } from "react-redux";
 import { toast } from "sonner";
 import ConfirmDelete from "./models/ConfirmDelete";
 import { useRouter } from "next/navigation";
+import { useUser } from "@clerk/nextjs"
 
 function TrashBox() {
   const [search, setSearch] = useState("");
+  const { user } = useUser();
   const documents = useSelector(
     (state: RootState) => state.documents.trashDocuments
   );
@@ -38,10 +40,12 @@ function TrashBox() {
 
   useEffect(() => {
     const getAllDocs = async () => {
-      const documents = await getAllTrashDocuments();
-      console.log("Documents got ");
-      console.log({ documents });
-      dispatch(setArchievedDocuments(documents));
+      if (user) {
+        const documents = await getAllTrashDocuments(user.id);
+        console.log("Documents got ");
+        console.log({ documents });
+        dispatch(setArchievedDocuments(documents));
+      }
     };
 
     getAllDocs();

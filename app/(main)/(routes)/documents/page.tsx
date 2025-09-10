@@ -11,13 +11,12 @@ import { useDispatch } from "react-redux";
 import { toast } from "sonner";
 
 function DocumentPage() {
-  const { isSignedIn, user } = useUser();
-
+  const { isSignedIn, user  } = useUser();
   const dispatch = useDispatch();
 
   const handleCreateDocument = async () => {
     try {
-      const data = createNewDocument();
+      const data =  createNewDocument("New Document", user? user.id : "");
       toast.promise(data, {
         loading: "Creating New Document...",
         success: "Document created successfully",

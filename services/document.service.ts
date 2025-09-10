@@ -2,10 +2,12 @@
 import api from "@/lib/axios";
 import { Document, Page } from "@/types";
 import { AxiosError } from "axios";
+import {useAuth} from "@clerk/nextjs";
 
-export const createNewDocument = async (title: string = "New Document"): Promise<Document | null> => {
+export const createNewDocument = async (title: string = "New Document" , userId:string): Promise<Document | null> => {
    try {
-      const res = await api.post("/documents/create", { title });
+      // const { userId } = useAuth();
+      const res = await api.post("/documents/create", { title , userId });
       const { data } = res.data;
       // console.log({ DOC: data });
       return data;
@@ -20,9 +22,9 @@ export const createNewDocument = async (title: string = "New Document"): Promise
 };
 
 
-export const getAllDocuments = async (): Promise<Document[]> => {
+export const getAllDocuments = async (userId:string): Promise<Document[]> => {
    try {
-      const res = await api.get("/documents");
+      const res = await api.get(`/documents${userId ? `?userId=${userId}` : ""}`);
       const { data } = res.data;
       // console.log({ DOC: data });
       return data;
@@ -37,9 +39,9 @@ export const getAllDocuments = async (): Promise<Document[]> => {
 }
 
 
-export const addPageToCurrentDocument = async (documentId: string): Promise<Page | null> => {
+export const addPageToCurrentDocument = async (documentId: string ): Promise<Page | null> => {
    try {
-      const res = await api.post("/documents/add-page", { documentId });
+      const res = await api.post("/documents/add-page", { documentId  });
       const { data } = res.data;
       // console.log({ DOC: data });
       return data;
@@ -72,9 +74,10 @@ export const archiveDocumentById = async (documentId: string): Promise<boolean> 
 }
 
 
-export const getAllTrashDocuments = async (): Promise<Document[]> => {
+export const getAllTrashDocuments = async (userId:string): Promise<Document[]> => {
    try {
-      const res = await api.get("/documents/trash");
+
+      const res = await api.get(`/documents/trash${userId ? `?userId=${userId}` : ""}`);
       const { data } = res.data;
       return data;
    } catch (err: unknown) {
