@@ -23,7 +23,7 @@ interface CoverImageProps {
 function CoverImage({ url, previewMode }: CoverImageProps) {
   const dispatch = useDispatch();
   const handleChangeClick = () => {
-    dispatch(setCoverReplacedUrlReducder(url));
+    dispatch(setCoverReplacedUrlReducder(url || ""));
   };
   const params = useParams();
   const { documentId, pageId } = params;
