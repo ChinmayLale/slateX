@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 
 import SettingsModel from "../SettingsModel";
+import GallaryUploadModal from "../GallaryUploadModal";
 
 function ModalProvider() {
   const [isMounted, setIsMpunted] = useState(false);
@@ -17,6 +18,7 @@ function ModalProvider() {
   return (
     <>
       <SettingsModel />
+      <GallaryUploadModal />
     </>
   );
 }

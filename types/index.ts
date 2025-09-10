@@ -26,11 +26,12 @@ export interface Page {
    createdAt: string;  // ISO Date from backend
    updatedAt: string;
    documentId?: string | null;
-   content?: JSON; // JSON, can refine this type later
+   content?: string; // JSON, can refine this type later
    blocks: Block[];
    isArchived: boolean;
    coverImage?: string;
    icon?: string;
+   isPublished: boolean;
 }
 
 export interface Document {

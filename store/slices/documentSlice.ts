@@ -76,7 +76,7 @@ const documentSlice = createSlice({
             });
             const currentDocument = state.trashDocuments[documentIndex];
             state.documents.push(currentDocument);
-            state.trashDocuments.splice(documentIndex,1);
+            state.trashDocuments.splice(documentIndex, 1);
          } else {
             console.warn("Document not found:", documentId);
             return;
@@ -109,11 +109,57 @@ const documentSlice = createSlice({
          }
       },
 
+
+      UpdateIconForCurrentPageReducer: (state, action: PayloadAction<{ documentId: string; pageId: string; icon: string }>) => {
+         const { documentId, pageId, icon } = action.payload;
+         const documentIndex = state.documents.findIndex(doc => doc.id === documentId);
+         if (documentIndex !== -1) {
+            const page = state.documents[documentIndex].pages.find(page => page.id === pageId);
+            if (page) {
+               page.icon = icon;
+            }
+         }
+      },
+
+
+      UpdateCoverImageForPageReducer: (state, action: PayloadAction<{ documentId: string; pageId: string; coverImage: string }>) => {
+         const { documentId, pageId, coverImage } = action.payload;
+         const documentIndex = state.documents.findIndex(doc => doc.id === documentId);
+         if (documentIndex !== -1) {
+            const page = state.documents[documentIndex].pages.find(page => page.id === pageId);
+            if (page) {
+               page.coverImage = coverImage;
+            }
+         }
+      },
+
+      UpdatePageContentReducer: (state, action: PayloadAction<{ documentId: string; pageId: string; content: string }>) => {
+         const { documentId, pageId, content } = action.payload;
+         const documentIndex = state.documents.findIndex(doc => doc.id === documentId);
+         if (documentIndex !== -1) {
+            const page = state.documents[documentIndex].pages.find(page => page.id === pageId);
+            if (page) {
+               page.content = content as string;
+            }
+         }
+      },
+
+
+      PublishPagebyIdReducer: (state, action: PayloadAction<{ documentId: string; pageId: string }>) => {
+         const { documentId, pageId } = action.payload;
+         const documentIndex = state.documents.findIndex(doc => doc.id === documentId);
+         if (documentIndex !== -1) {
+            const page = state.documents[documentIndex].pages.find(page => page.id === pageId);
+            if (page) {
+               page.isPublished = !page.isPublished;
+            }
+         }
+      }
    },
 });
 
 
 
 
-export const { setDocuments, setLoading, setError, addDocument, addPageToCurrentDocumentReducer, archiveDocumentByIdReducer, addDocuments, restoreDocumentFromArchiveReducer, setArchievedDocuments, deleteDocumentFromArchiveReducer, UpdatePageTitleInDocumentReducer } = documentSlice.actions;
+export const { setDocuments, setLoading, setError, addDocument, addPageToCurrentDocumentReducer, archiveDocumentByIdReducer, addDocuments, restoreDocumentFromArchiveReducer, setArchievedDocuments, deleteDocumentFromArchiveReducer, UpdatePageTitleInDocumentReducer, UpdateIconForCurrentPageReducer, UpdateCoverImageForPageReducer, UpdatePageContentReducer, PublishPagebyIdReducer } = documentSlice.actions;
 export default documentSlice.reducer;

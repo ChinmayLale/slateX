@@ -37,8 +37,13 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import TrashBox from "./TrashBox";
-import { toggleSearch, toggleSettings } from "@/store/slices/misc.slice";
+import {
+  toggleCreateDocument,
+  toggleSearch,
+  toggleSettings,
+} from "@/store/slices/misc.slice";
 import NavBar from "./NavBar";
+import { AddDocumentModel } from "./models/AddDocumentModel";
 
 function Navigation() {
   const pathname = usePathname();
@@ -47,6 +52,12 @@ function Navigation() {
   const isResizingref = useRef(false);
   const sideBarRef = useRef<ElementRef<"aside">>(null);
   const navbarRef = useRef<ElementRef<"div">>(null);
+
+  const openModel = useSelector(
+    (state: RootState) => state.misc.toggleCreateDocument
+  );
+
+  const [open, setOpen] = React.useState(false);
 
   const params = useParams();
 
@@ -80,23 +91,25 @@ function Navigation() {
   }, [isMobile, pathname]);
 
   const handleCreateDocument = async () => {
-    try {
-      const data = createNewDocument();
-      toast.promise(data, {
-        loading: "Creating New Document...",
-        success: "Document created successfully",
-        error: "Failed to create document",
-      });
-      // console.log("New Document:", data);
-      const newDocument = await data;
-      if (!newDocument) {
-        toast.error("Failed to create document");
-        return;
-      }
-      dispatch(addDocument(newDocument));
-    } catch (err) {
-      console.error(err);
-    }
+    // try {
+    //   const data = createNewDocument();
+    //   toast.promise(data, {
+    //     loading: "Creating New Document...",
+    //     success: "Document created successfully",
+    //     error: "Failed to create document",
+    //   });
+    //   // console.log("New Document:", data);
+    //   const newDocument = await data;
+    //   if (!newDocument) {
+    //     toast.error("Failed to create document");
+    //     return;
+    //   }
+    //   dispatch(addDocument(newDocument));
+    // } catch (err) {
+    //   console.error(err);
+    // }
+
+    setOpen(true);
   };
 
   const handleMouseMove = (event: MouseEvent) => {
@@ -216,6 +229,7 @@ function Navigation() {
             icon={Settings}
           />
 
+          <AddDocumentModel onOpenChange={setOpen} open={open} />
           <Item
             label={"new page"}
             onClick={handleCreateDocument}
@@ -252,7 +266,12 @@ function Navigation() {
         )}
       >
         {!!params.documentId ? (
-          <NavBar isCollapsed={isCollapsed} onResetWidth={resetWidth} documentId={documentId as string} pageId={pageId as string}/>
+          <NavBar
+            isCollapsed={isCollapsed}
+            onResetWidth={resetWidth}
+            documentId={documentId as string}
+            pageId={pageId as string}
+          />
         ) : (
           <nav className="bg-transparent px-3 py-2 w-full">
             {isCollapsed && (

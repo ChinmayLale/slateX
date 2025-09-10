@@ -3,9 +3,9 @@ import api from "@/lib/axios";
 import { Document, Page } from "@/types";
 import { AxiosError } from "axios";
 
-export const createNewDocument = async (): Promise<Document | null> => {
+export const createNewDocument = async (title: string = "New Document"): Promise<Document | null> => {
    try {
-      const res = await api.post("/documents/create");
+      const res = await api.post("/documents/create", { title });
       const { data } = res.data;
       // console.log({ DOC: data });
       return data;
@@ -133,5 +133,47 @@ export const updateTitleForPageService = async (documentId: string, pageId: stri
          console.error("Unexpected error:", err);
       }
       return "";
+   }
+}
+
+
+
+export const updateCoverImageForPageService = async (
+   documentId: string,
+   pageId: string,
+   coverImage: string = "" // default to empty string
+): Promise<string | null> => {
+   try {
+      const res = await api.post(`/documents/page/update-cover-image`, {
+         documentId,
+         pageId,
+         coverImage, // will be "" if not passed
+      });
+      const { data } = res.data;
+      return data;
+   } catch (err: unknown) {
+      if (err instanceof AxiosError) {
+         console.error("Axios error:", err.message);
+      } else {
+         console.error("Unexpected error:", err);
+      }
+      return "";
+   }
+};
+
+
+
+export const publishAPageService = async (id: string): Promise<boolean> => {
+   try {
+      const res = await api.post(`/documents/page/publish`, { pageId: id });
+      const { data } = res.data;
+      return !!data;
+   } catch (err: unknown) {
+      if (err instanceof AxiosError) {
+         console.error("Axios error:", err.message);
+      } else {
+         console.error("Unexpected error:", err);
+      }
+      return false;
    }
 }

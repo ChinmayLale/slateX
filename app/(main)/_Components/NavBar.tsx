@@ -8,6 +8,7 @@ import { getPageByIds } from "@/store/selectors/documentSelectors";
 import { RootState } from "@/store";
 import { useParams } from "next/navigation";
 import Banner from "./Banner";
+import Publish from "./Publish";
 
 interface NavBarProps {
   isCollapsed: boolean;
@@ -58,14 +59,12 @@ NavBarProps) {
             documentId={documentId as string}
             pageId={pageId as string}
           />
+
+          <Publish intialData = { page}/>
         </div>
       </nav>
 
-      {page.isArchived  && (
-        <Banner
-          pageId={pageId as string}
-        />
-      )}
+      {page.isArchived && <Banner pageId={pageId as string} />}
     </>
   );
 }

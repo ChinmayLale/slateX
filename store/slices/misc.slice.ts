@@ -4,12 +4,20 @@ interface miscSlice {
    isSearchOpen: boolean
    isSettingsOpen: boolean
    isDocumentDeleted: Record<string, boolean>
+   isUploadOpen: boolean
+   coverReplacedUrl?: string | undefined
+
+   toggleCreateDocument: boolean
 }
 
 const initialState: miscSlice = {
    isSearchOpen: false,
    isSettingsOpen: false,
-   isDocumentDeleted: {}
+   isDocumentDeleted: {},
+   isUploadOpen: false,
+   coverReplacedUrl: undefined,
+
+   toggleCreateDocument: false
 };
 
 const miscSlice = createSlice({
@@ -30,6 +38,19 @@ const miscSlice = createSlice({
       // ✅ Alternative: Replace entire record (keep this if you need it)
       setDocumentDeletedRecord: (state, action: PayloadAction<Record<string, boolean>>) => {
          state.isDocumentDeleted = action.payload;
+      },
+
+      toggleUpload: (state, action: PayloadAction<boolean>) => {
+         state.isUploadOpen = action.payload;
+      },
+
+      setCoverReplacedUrlReducder: (state, action: PayloadAction<string | null>) => {
+         state.coverReplacedUrl = action.payload ? action.payload : undefined;
+         state.isUploadOpen = true
+      },
+
+      toggleCreateDocument: (state, action: PayloadAction<boolean>) => {
+         state.toggleCreateDocument = action.payload;
       }
    }
 })
@@ -38,6 +59,9 @@ export const {
    toggleSearch,
    toggleSettings,
    toggleDocumentDeleted,
-   setDocumentDeletedRecord
+   setDocumentDeletedRecord,
+   toggleUpload,
+   setCoverReplacedUrlReducder,
+   toggleCreateDocument
 } = miscSlice.actions;
 export default miscSlice.reducer

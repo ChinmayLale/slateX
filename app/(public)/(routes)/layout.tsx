@@ -1,11 +1,12 @@
 "use client";
-import React from "react";
-import Navigation from "./_Components/Navigation";
+import React, { useState } from "react";
+import Navigation from "@/app/(main)/_Components/Navigation";
 import { Provider } from "react-redux";
 import { store } from "@/store";
 import SearchCommand from "@/components/SearchCommand";
 import ModalProvider from "@/components/providers/ModalProvider";
-import { EdgeStoreProvider } from "../../lib/edgestore";
+import { EdgeStoreProvider } from "../../../lib/edgestore";
+
 function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <Provider store={store}>
@@ -13,7 +14,7 @@ function RootLayout({ children }: { children: React.ReactNode }) {
         className="w-full h-full flex dark:bg-[#1f1f1f]"
         suppressContentEditableWarning
       >
-        <Navigation />
+        {/* <Navigation /> */}
         <main className="flex-1 h-full overflow-y-auto">
           <EdgeStoreProvider>
             <SearchCommand />
