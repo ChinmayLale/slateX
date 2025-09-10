@@ -6,10 +6,13 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { RootState } from "@/store";
 import { getPageByIds } from "@/store/selectors/documentSelectors";
 import { useParams } from "next/navigation";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
-import { setDocuments, UpdatePageContentReducer } from "@/store/slices/documentSlice";
+import {
+  setDocuments,
+  UpdatePageContentReducer,
+} from "@/store/slices/documentSlice";
 import { getAllDocuments } from "@/services/document.service";
 
 function DocumentIdPage() {
@@ -17,7 +20,7 @@ function DocumentIdPage() {
   const { documentId, pageId } = params;
   const dispatch = useDispatch();
 
-  useState(() => {
+  useEffect(() => {
     const getDocs = async () => {
       const documents = await getAllDocuments();
       dispatch(setDocuments(documents));

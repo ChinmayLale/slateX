@@ -67,7 +67,7 @@ function Navigation() {
   const [isReseting, setIsReseting] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(isMobile);
 
-  useState(() => {
+  useEffect(() => {
     const getDocs = async () => {
       const documents = await getAllDocuments();
       dispatch(setDocuments(documents));
@@ -112,7 +112,7 @@ function Navigation() {
     setOpen(true);
   };
 
-  const handleMouseMove = (event: MouseEvent) => {
+  const handleMouseMove = (event: globalThis.MouseEvent) => {
     if (!isResizingref.current) {
       return;
     }
@@ -140,9 +140,7 @@ function Navigation() {
     document.removeEventListener("mouseup", handleMouseUp);
   };
 
-  const handleMouseDown = (
-    event: React.MouseEvent<HTMLDivElement, MouseEvent>
-  ) => {
+  const handleMouseDown = (event: React.MouseEvent<HTMLDivElement>) => {
     event.preventDefault();
     event.stopPropagation();
 
@@ -266,12 +264,7 @@ function Navigation() {
         )}
       >
         {!!params.documentId ? (
-          <NavBar
-            isCollapsed={isCollapsed}
-            onResetWidth={resetWidth}
-            documentId={documentId as string}
-            pageId={pageId as string}
-          />
+          <NavBar isCollapsed={isCollapsed} onResetWidth={resetWidth} />
         ) : (
           <nav className="bg-transparent px-3 py-2 w-full">
             {isCollapsed && (
