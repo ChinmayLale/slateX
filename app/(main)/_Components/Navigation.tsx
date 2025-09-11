@@ -76,7 +76,7 @@ function Navigation() {
     };
 
     getDocs();
-  }, []);
+  }, [user]);
 
   useEffect(() => {
     if (isMobile) {
