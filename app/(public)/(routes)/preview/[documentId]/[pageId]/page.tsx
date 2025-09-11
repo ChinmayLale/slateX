@@ -14,15 +14,17 @@ import {
   UpdatePageContentReducer,
 } from "@/store/slices/documentSlice";
 import { getAllDocuments } from "@/services/document.service";
+import { useUser } from "@clerk/nextjs";
 
 function DocumentIdPage() {
   const params = useParams();
   const { documentId, pageId } = params;
   const dispatch = useDispatch();
+  const { user } = useUser();
 
   useEffect(() => {
     const getDocs = async () => {
-      const documents = await getAllDocuments();
+      const documents = await getAllDocuments(user ? user.id : "");
       dispatch(setDocuments(documents));
     };
 
