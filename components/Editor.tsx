@@ -87,6 +87,11 @@ function Editor({
     return (await upload).url;
   };
 
+  const editor = useCreateBlockNote({
+    initialContent: data,
+    uploadFile: handleFileUpload,
+  });
+
   if (loading) {
     return (
       <div>
@@ -104,13 +109,7 @@ function Editor({
 
   // Create the editor with initial content
 
-  const editor = useCreateBlockNote({
-    initialContent: data,
-    uploadFile: handleFileUpload,
-  });
-
   return (
-    
     <BlockNoteView
       editor={editor}
       editable={editable}
