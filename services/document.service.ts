@@ -180,3 +180,19 @@ export const publishAPageService = async (id: string): Promise<boolean> => {
       return false;
    }
 }
+
+
+export const UpdateContentByPageIdService = async (pageId: string, content: string): Promise<boolean> => {
+   try {
+      const res = await api.post(`/documents/page/update-content`, { pageId, pageContent: content });
+      const { data } = res.data;
+      return !!data;
+   } catch (err: unknown) {
+      if (err instanceof AxiosError) {
+         console.error("Axios error:", err.message);
+      } else {
+         console.error("Unexpected error:", err);
+      }
+      return false;
+   }
+}

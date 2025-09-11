@@ -19,7 +19,7 @@ function GallaryUploadModal() {
   const isOpen = useSelector((state: RootState) => state.misc.isUploadOpen);
   const params = useParams();
   const { documentId, pageId } = params;
-
+  console.log(`documentId ${documentId} pageId ${pageId}`);
   const replaceUrl = useSelector(
     (state: RootState) => state.misc.coverReplacedUrl
   );

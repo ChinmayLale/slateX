@@ -29,8 +29,22 @@ function Editor({
   const { edgestore } = useEdgeStore();
   const getInitialContent = (): PartialBlock[] | undefined => {
     if (initialContent) {
+      console.log({ initialContent });
       try {
-        return JSON.parse(initialContent) as PartialBlock[];
+        // Check if initialContent is already an object/array
+        if (typeof initialContent === "object") {
+          return initialContent as PartialBlock[];
+        }
+
+        // If it's a string, parse it
+        const parsed = JSON.parse(initialContent);
+
+        // If the parsed result is still a string, parse again (double-stringified)
+        if (typeof parsed === "string") {
+          return JSON.parse(parsed) as PartialBlock[];
+        }
+
+        return parsed as PartialBlock[];
       } catch (error) {
         console.error("Error parsing initial content:", error);
         return undefined;
