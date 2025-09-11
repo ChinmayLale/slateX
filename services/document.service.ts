@@ -196,3 +196,20 @@ export const UpdateContentByPageIdService = async (pageId: string, content: stri
       return false;
    }
 }
+
+
+
+export const getPageByIdService = async (pageId: string): Promise<Page | null> => {
+   try {
+      const res = await api.get(`/documents/getPage?pageId=${pageId}`);
+      const { data } = res.data;
+      return data;
+   } catch (err: unknown) {
+      if (err instanceof AxiosError) {
+         console.error("Axios error:", err.message);
+      } else {
+         console.error("Unexpected error:", err);
+      }
+      return null;
+   }
+}

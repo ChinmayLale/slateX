@@ -13,28 +13,25 @@ import {
   setDocuments,
   UpdatePageContentReducer,
 } from "@/store/slices/documentSlice";
-import { getAllDocuments } from "@/services/document.service";
+import { getAllDocuments, getPageByIdService } from "@/services/document.service";
 import { useUser } from "@clerk/nextjs";
+import { Page } from "@/types";
 
 function DocumentIdPage() {
   const params = useParams();
   const { documentId, pageId } = params;
   const dispatch = useDispatch();
-  const { user } = useUser();
+  const [ page , setPage] = useState<Page | null>(null);
 
   useEffect(() => {
     const getDocs = async () => {
-      const documents = await getAllDocuments(user ? user.id : "");
-      dispatch(setDocuments(documents));
+      const page = await getPageByIdService(pageId as string);
+      setPage(page)
     };
 
     getDocs();
   }, []);
 
-  const page =
-    useSelector((state: RootState) =>
-      getPageByIds(state, documentId as string, pageId as string)
-    ) || null;
 
   const onChangeContent = (value: string) => {
     console.log(value);
