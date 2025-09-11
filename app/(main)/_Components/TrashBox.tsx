@@ -7,11 +7,9 @@ import {
 } from "@/services/document.service";
 import { RootState } from "@/store";
 import {
-  addDocuments,
   deleteDocumentFromArchiveReducer,
   restoreDocumentFromArchiveReducer,
-  setArchievedDocuments,
-  setDocuments,
+  setArchievedDocuments
 } from "@/store/slices/documentSlice";
 import { Search, Trash, Undo } from "lucide-react";
 import React, { useEffect, useMemo, useState } from "react";

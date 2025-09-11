@@ -24,7 +24,7 @@ function NavBar({
 NavBarProps) {
   // Add Code here to getPage By Doc Id
 
-  const [isRestored, setIsRestored] = React.useState(false);
+  // const [isRestored, setIsRestored] = React.useState(false);
   const params = useParams();
   const { documentId, pageId } = params;
   //   console.log({ documentId, pageId });

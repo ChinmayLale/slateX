@@ -3,12 +3,12 @@
 import { RootState } from "@/store";
 import { Document } from "@/types";
 import { useParams, useRouter } from "next/navigation";
-import React, { useEffect } from "react";
+import React  from "react";
 import { useSelector } from "react-redux";
 import Item from "./Item";
-import { cn } from "@/lib/utils";
+// import { cn } from "@/lib/utils";
 import { FileIcon } from "lucide-react";
-import { DialogCloseButton } from "./DialogCloseButton";
+// import { DialogCloseButton } from "./DialogCloseButton";
 
 interface DocumentListProps {
   parentId?: string;
@@ -24,6 +24,7 @@ function DocumentList({ parentId, level = 0 }: DocumentListProps) {
   );
   const [expanded, setExpanded] = React.useState<Record<string, boolean>>({});
   // const [open, setOpen] = React.useState(false);
+  console.log({DocumentList:parentId})
   const onExpand = (id: string) => {
     setExpanded((prevExpanded) => ({
       ...prevExpanded,

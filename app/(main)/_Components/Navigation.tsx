@@ -13,7 +13,6 @@ import React, {
   useRef,
   ElementRef,
   useState,
-  MouseEvent,
   useEffect,
 } from "react";
 import { useMediaQuery } from "usehooks-ts";
@@ -22,13 +21,12 @@ import Item from "./Item";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
 import {
-  createNewDocument,
   getAllDocuments,
 } from "@/services/document.service";
 import { useDispatch } from "react-redux";
-import { addDocument, setDocuments } from "@/store/slices/documentSlice";
-import { get } from "http";
-import { toast } from "sonner";
+import {  setDocuments } from "@/store/slices/documentSlice";
+// import { get } from "http";
+// import { toast } from "sonner";
 import DocumentList from "./DocumentList";
 import { useUser } from "@clerk/nextjs";
 import {
@@ -38,7 +36,7 @@ import {
 } from "@/components/ui/popover";
 import TrashBox from "./TrashBox";
 import {
-  toggleCreateDocument,
+  // toggleCreateDocument,
   toggleSearch,
   toggleSettings,
 } from "@/store/slices/misc.slice";
@@ -61,7 +59,7 @@ function Navigation() {
 
   const params = useParams();
 
-  const { documentId, pageId } = params;
+  // const { documentId, pageId } = params;
   // console.log({ documentId, pageId });
 
   const [isReseting, setIsReseting] = useState(false);

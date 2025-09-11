@@ -23,7 +23,7 @@ import { archiveDocumentById } from "@/services/document.service";
 import { toast } from "sonner";
 import { useDispatch } from "react-redux";
 import { archiveDocumentByIdReducer } from "@/store/slices/documentSlice";
-import { toggleDocumentDeleted } from "@/store/slices/misc.slice";
+// import { toggleDocumentDeleted } from "@/store/slices/misc.slice";
 
 interface ItemProps {
   id?: string;
@@ -52,8 +52,7 @@ function Item({
   level = 0,
   onExpand,
   showAddButton = false,
-  onAdd,
-  ...props
+  onAdd
 }: ItemProps) {
   const [open, setOpen] = React.useState(false);
   const ChevronIcon = expanded ? ChevronDown : ChevronRight;

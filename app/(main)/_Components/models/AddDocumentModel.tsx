@@ -7,18 +7,17 @@ import {
   DialogDescription,
   DialogFooter,
   DialogHeader,
-  DialogTitle,
-  DialogTrigger,
+  DialogTitle
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
-  addPageToCurrentDocument,
+  // addPageToCurrentDocument,
   createNewDocument,
 } from "@/services/document.service";
 import {
   addDocument,
-  addPageToCurrentDocumentReducer,
+  // addPageToCurrentDocumentReducer,
 } from "@/store/slices/documentSlice";
 import { useUser } from "@clerk/nextjs";
 import React from "react";

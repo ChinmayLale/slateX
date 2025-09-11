@@ -3,13 +3,13 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useTitleEditor, useTitleEditorForInput } from "@/hooks/useTitleEditor";
-import { updateTitleForPageService } from "@/services/document.service";
-import { UpdatePageTitleInDocumentReducer } from "@/store/slices/documentSlice";
+import {  useTitleEditorForInput } from "@/hooks/useTitleEditor";
+// import { updateTitleForPageService } from "@/services/document.service";
+// import { UpdatePageTitleInDocumentReducer } from "@/store/slices/documentSlice";
 // import { Page } from "@/types";
-import React, { useEffect, useState, useRef } from "react";
-import { useDispatch } from "react-redux";
-import { useDebounceCallback } from "usehooks-ts";
+import React  from "react";
+// import { useDispatch } from "react-redux";
+// import { useDebounceCallback } from "usehooks-ts";
 
 interface PageTitleProps {
   initialTitle: string;
@@ -37,6 +37,7 @@ function PageTitle({ initialTitle, documentId, pageId }: PageTitleProps) {
     },
   });
 
+  console.log({PageTitle:[documentId,pageId]})
   return (
     <div className="flex items-center gap-x-1">
       {isEditing ? (

@@ -6,7 +6,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { RootState } from "@/store";
 import { getPageByIds } from "@/store/selectors/documentSelectors";
 import { useParams } from "next/navigation";
-import React, { useCallback } from "react";
+import React from "react";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { UpdatePageContentReducer } from "@/store/slices/documentSlice";
@@ -42,7 +42,7 @@ function DocumentIdPage() {
     { leading: false, trailing: true } // Optional: configure debounce behavior
   );
 
-  if (page === undefined) {
+  if (page === null) {
     return (
       <div>
         <CoverImage.Skeleton />

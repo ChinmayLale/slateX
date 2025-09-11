@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import React, { useEffect } from "react";
+import React from "react";
 import ConfirmDelete from "./models/ConfirmDelete";
 import {
   deletePermenently,
@@ -14,14 +14,14 @@ import {
 } from "@/store/slices/documentSlice";
 import { useDispatch } from "react-redux";
 import { useParams, useRouter } from "next/navigation";
-import { toggleDocumentDeleted } from "@/store/slices/misc.slice";
+// import { toggleDocumentDeleted } from "@/store/slices/misc.slice";
 
 function Banner({ pageId }: { pageId: string }) {
   const dispatch = useDispatch();
   const params = useParams();
   const router = useRouter();
   const documentId = params.documentId as string;
-
+  console.log({Banner:pageId})
   const handlePermenentDelete = async (id: string) => {
     const res = deletePermenently(id);
     toast.promise(res, {

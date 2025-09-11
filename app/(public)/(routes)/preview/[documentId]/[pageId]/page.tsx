@@ -44,7 +44,7 @@ function DocumentIdPage() {
     );
   };
 
-  if (page === undefined) {
+  if (page === null) {
     return (
       <div>
         <CoverImage.Skeleton />
@@ -66,7 +66,7 @@ function DocumentIdPage() {
         <Editor
           onChange={onChangeContent}
           editable={false}
-          initialContent={page?.content}
+          initialContent={page.content}
         />
       </div>
     </div>
