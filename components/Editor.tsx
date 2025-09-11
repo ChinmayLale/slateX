@@ -19,6 +19,7 @@ interface EditorProps {
   onChange: (value: string) => void;
   initialContent?: string;
   editable?: boolean;
+  data?:PartialBlock[];
 }
 
 function Editor({
@@ -27,11 +28,12 @@ function Editor({
   onChange,
   initialContent,
   editable = true,
+  data,
 }: EditorProps) {
   const { theme } = useTheme();
   const { edgestore } = useEdgeStore();
   const [loading, setLoading] = React.useState(false);
-  const [data, setData] = React.useState<PartialBlock[] | undefined>(undefined);
+  // const [data, setData] = React.useState<PartialBlock[] | undefined>(undefined);
   const getInitialContent = async (): Promise<PartialBlock[] | undefined> => {
     if (initialContent) {
       console.log({ initialContent });
@@ -64,15 +66,7 @@ function Editor({
     return undefined;
   };
 
-  React.useEffect(() => {
-    const parseContent = async () => {
-      setLoading(true);
-      const content = await getInitialContent();
-      setData(content);
-      setLoading(false);
-    };
-    parseContent();
-  }, [initialContent]);
+
 
   const handleFileUpload = async (file: File): Promise<string> => {
     const upload = edgestore.publicFiles.upload({
