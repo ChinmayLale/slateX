@@ -87,7 +87,7 @@ function Editor({
     return (await upload).url;
   };
 
-  if (loading && !data===undefined) {
+  if (loading) {
     return (
       <div>
         <CoverImage.Skeleton />
