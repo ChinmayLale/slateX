@@ -147,7 +147,7 @@ export const updateCoverImageForPageService = async (
    coverImage: string = "" // default to empty string
 ): Promise<string | null> => {
    try {
-      const res = await api.post(`/documents/page/update-cover-image`, {
+      const res = await api.post(`/documents/page/updateCoverImage`, {
          documentId,
          pageId,
          coverImage, // will be "" if not passed
